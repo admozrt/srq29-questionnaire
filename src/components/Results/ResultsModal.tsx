@@ -14,63 +14,252 @@ interface ResultsModalProps {
   onContinue: () => void;
 }
 
-// Print hook untuk mencegah loop
+// Simple Print hook dengan window baru
 const usePrint = () => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [printError, setPrintError] = useState<string | null>(null);
 
-  const handlePrint = useCallback(() => {
-    if (isPrinting) {
-      console.warn('Print sudah dalam proses');
-      return;
-    }
+  const handlePrint = useCallback((results: Results, personalInfo: PersonalInfo) => {
+    if (isPrinting) return;
 
-    const executePrint = async () => {
-      try {
-        setIsPrinting(true);
-        setPrintError(null);
-        
-        // Add print class untuk styling
-        document.body.classList.add('printing');
-        
-        // Delay singkat untuk memastikan styles terload
-        await new Promise(resolve => setTimeout(resolve, 150));
-        
-        // Execute print
-        window.print();
-        
-      } catch (error) {
-        console.error('Print gagal:', error);
-        setPrintError('Gagal mencetak dokumen. Silakan coba lagi.');
+    try {
+      setIsPrinting(true);
+      setPrintError(null);
+
+      // Buat window baru untuk print
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+      
+      if (!printWindow) {
+        throw new Error('Popup diblokir oleh browser');
       }
-    };
 
-    // Cleanup function yang akan dipanggil setelah print
-    const cleanup = () => {
-      document.body.classList.remove('printing');
+      // HTML content untuk print
+      const printHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Hasil Skrining Kesehatan Jiwa</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 20px;
+              color: black;
+              background: white;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 3px solid black;
+            }
+            .header-table {
+              width: 100%;
+              margin-bottom: 15px;
+            }
+            .header-table td {
+              vertical-align: middle;
+            }
+            .logo {
+              width: 80px;
+              height: 80px;
+              object-fit: contain;
+            }
+            .title {
+              text-align: center;
+              padding: 0 20px;
+            }
+            .main-title {
+              font-size: 18pt;
+              font-weight: bold;
+              margin: 0 0 8px 0;
+            }
+            .sub-title {
+              font-size: 16pt;
+              font-weight: bold;
+              margin: 0 0 8px 0;
+            }
+            .institution {
+              font-size: 12pt;
+              margin: 0;
+            }
+            .section {
+              margin-bottom: 25px;
+            }
+            .section-title {
+              font-size: 14pt;
+              font-weight: bold;
+              margin: 0 0 15px 0;
+              padding: 8px 0;
+              border-bottom: 2px solid black;
+              text-transform: uppercase;
+            }
+            .info-table {
+              width: 100%;
+              margin-bottom: 20px;
+            }
+            .info-table td {
+              vertical-align: top;
+              padding-right: 20px;
+              width: 50%;
+            }
+            .info-table p {
+              margin: 0 0 8px 0;
+              font-size: 11pt;
+            }
+            .info-table strong {
+              display: inline-block;
+              width: 100px;
+              font-weight: bold;
+            }
+            .result-item {
+              margin-bottom: 15px;
+              padding: 10px;
+              border: 2px solid black;
+            }
+            .result-title {
+              font-size: 12pt;
+              font-weight: bold;
+              margin: 0 0 5px 0;
+            }
+            .result-desc {
+              font-size: 11pt;
+              margin: 0;
+            }
+            .note {
+              margin: 25px 0;
+              padding: 15px;
+              border: 2px solid black;
+            }
+            .note-title {
+              font-size: 12pt;
+              font-weight: bold;
+              margin: 0 0 8px 0;
+              text-transform: uppercase;
+            }
+            .note-text {
+              font-size: 11pt;
+              margin: 0;
+              line-height: 1.4;
+            }
+            .footer {
+              margin-top: 30px;
+              padding-top: 15px;
+              border-top: 1px solid black;
+              text-align: center;
+              font-size: 10pt;
+            }
+            .footer p {
+              margin: 3px 0;
+            }
+            @media print {
+              body { margin: 0; }
+              @page { margin: 2cm; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <table class="header-table">
+              <tr>
+                <td style="width: 100px; text-align: center;">
+                  <img src="/file.png" alt="Logo Kiri" class="logo" />
+                </td>
+                <td class="title">
+                  <h1 class="main-title">HASIL SKRINING KESEHATAN JIWA</h1>
+                  <h2 class="sub-title">Self Reporting Questionnaire 29 (SRQ-29)</h2>
+                  <p class="institution">RSJ Sambang Lihum - Provinsi Kalimantan Selatan</p>
+                </td>
+                <td style="width: 100px; text-align: center;">
+                  <img src="/logo-rsj.png" alt="Logo RSJ" class="logo" />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Informasi Responden</h3>
+            <table class="info-table">
+              <tr>
+                <td>
+                  <p><strong>Tanggal:</strong> ${getCurrentDateInIndonesia()}</p>
+                  <p><strong>Nama:</strong> ${personalInfo.name}</p>
+                  <p><strong>Gender:</strong> ${personalInfo.gender}</p>
+                </td>
+                <td>
+                  <p><strong>Umur:</strong> ${personalInfo.age} tahun</p>
+                  <p><strong>Instansi:</strong> ${personalInfo.institution}</p>
+                  <p><strong>Total Skor:</strong> ${results.totalScore}/29</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Hasil Skrining</h3>
+            ${results.gme ? `
+              <div class="result-item">
+                <p class="result-title">☑ Masalah psikologis (cemas/depresi)</p>
+                <p class="result-desc">Rujukan: Psikiater/Psikolog klinis</p>
+              </div>
+            ` : ''}
+            ${results.substance ? `
+              <div class="result-item">
+                <p class="result-title">☑ Penggunaan zat psikoaktif</p>
+                <p class="result-desc">Rujukan: Psikiater/Konselor adiksi</p>
+              </div>
+            ` : ''}
+            ${results.psychotic ? `
+              <div class="result-item">
+                <p class="result-title">☑ Gejala psikotik (SEGERA)</p>
+                <p class="result-desc">Rujukan: Psikiater (segera)</p>
+              </div>
+            ` : ''}
+            ${results.ptsd ? `
+              <div class="result-item">
+                <p class="result-title">☑ Gejala PTSD</p>
+                <p class="result-desc">Rujukan: Psikiater/Trauma specialist</p>
+              </div>
+            ` : ''}
+            ${!results.gme && !results.substance && !results.psychotic && !results.ptsd ? `
+              <div class="result-item">
+                <p class="result-title">☑ Tidak terdeteksi masalah signifikan</p>
+                <p class="result-desc">Tetap jaga kesehatan mental dengan pola hidup sehat</p>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="note">
+            <p class="note-title">Catatan Penting:</p>
+            <p class="note-text">
+              Hasil ini hanya sebagai alat ukur objektif. Konsultasi lebih lanjut dengan 
+              psikiater/psikolog klinis diperlukan untuk diagnosa yang akurat.
+            </p>
+          </div>
+
+          <div class="footer">
+            <p>Dicetak: ${getCurrentDateInIndonesia()}</p>
+            <p>© RSJ Sambang Lihum ${new Date().getFullYear()}</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Tulis HTML ke window baru
+      printWindow.document.write(printHTML);
+      printWindow.document.close();
+
+      // Wait sebentar untuk load, lalu print
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+        setIsPrinting(false);
+      }, 500);
+
+    } catch (error) {
+      console.error('Print gagal:', error);
+      setPrintError('Gagal mencetak dokumen. Pastikan popup tidak diblokir.');
       setIsPrinting(false);
-    };
-
-    // Event listeners untuk mendeteksi kapan print selesai
-    const afterPrint = () => {
-      cleanup();
-      window.removeEventListener('afterprint', afterPrint);
-    };
-
-    const beforePrint = () => {
-      window.removeEventListener('beforeprint', beforePrint);
-    };
-
-    // Listen for print events
-    window.addEventListener('beforeprint', beforePrint);
-    window.addEventListener('afterprint', afterPrint);
-
-    // Execute print
-    executePrint();
-
-    // Fallback cleanup jika event listeners tidak bekerja
-    setTimeout(cleanup, 3000);
-    
+    }
   }, [isPrinting]);
 
   const clearError = useCallback(() => {
@@ -79,88 +268,6 @@ const usePrint = () => {
 
   return { isPrinting, printError, handlePrint, clearError };
 };
-
-// Komponen untuk konten yang dapat dicetak
-const PrintableContent: React.FC<{ results: Results; personalInfo: PersonalInfo }> = ({
-  results,
-  personalInfo
-}) => (
-  <div className="print-only hidden print:block bg-white">
-    <div className="p-6">
-      {/* Header */}
-      <div className="text-center mb-6 pb-4 border-b-2 border-gray-800">
-        <h1 className="text-xl font-bold mb-2">HASIL SKRINING KESEHATAN JIWA</h1>
-        <h2 className="text-lg font-semibold">Self Reporting Questionnaire 29 (SRQ-29)</h2>
-        <p className="text-sm mt-2">RSJ Sambang Lihum - Provinsi Kalimantan Selatan</p>
-      </div>
-
-      {/* Info Responden */}
-      <div className="mb-6">
-        <h3 className="font-bold mb-3 border-b border-gray-400 pb-1">INFORMASI RESPONDEN</h3>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p><strong>Tanggal:</strong> {getCurrentDateInIndonesia()}</p>
-            <p><strong>Nama:</strong> {personalInfo.name}</p>
-            <p><strong>Gender:</strong> {personalInfo.gender}</p>
-          </div>
-          <div>
-            <p><strong>Umur:</strong> {personalInfo.age} tahun</p>
-            <p><strong>Instansi:</strong> {personalInfo.institution}</p>
-            <p><strong>Total Skor:</strong> {results.totalScore}/29</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Hasil */}
-      <div className="mb-6">
-        <h3 className="font-bold mb-3 border-b border-gray-400 pb-1">HASIL SKRINING</h3>
-        <div className="space-y-3 text-sm">
-          {results.gme && (
-            <div className="border-l-4 border-black pl-3">
-              <p className="font-semibold">□ Masalah psikologis (cemas/depresi)</p>
-              <p>Rujukan: Psikiater/Psikolog klinis</p>
-            </div>
-          )}
-          {results.substance && (
-            <div className="border-l-4 border-black pl-3">
-              <p className="font-semibold">□ Penggunaan zat psikoaktif</p>
-              <p>Rujukan: Psikiater/Konselor adiksi</p>
-            </div>
-          )}
-          {results.psychotic && (
-            <div className="border-l-4 border-black pl-3">
-              <p className="font-semibold">□ Gejala psikotik (SEGERA)</p>
-              <p>Rujukan: Psikiater (segera)</p>
-            </div>
-          )}
-          {results.ptsd && (
-            <div className="border-l-4 border-black pl-3">
-              <p className="font-semibold">□ Gejala PTSD</p>
-              <p>Rujukan: Psikiater/Trauma specialist</p>
-            </div>
-          )}
-          {!results.gme && !results.substance && !results.psychotic && !results.ptsd && (
-            <div className="border-l-4 border-black pl-3">
-              <p className="font-semibold">□ Tidak terdeteksi masalah signifikan</p>
-              <p>Tetap jaga kesehatan mental dengan pola hidup sehat</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Catatan */}
-      <div className="border border-black p-3 text-xs">
-        <p className="font-bold mb-1">CATATAN PENTING:</p>
-        <p>Hasil ini hanya sebagai alat ukur objektif. Konsultasi lebih lanjut dengan psikiater/psikolog klinis diperlukan untuk diagnosa yang akurat.</p>
-      </div>
-
-      {/* Footer */}
-      <div className="mt-4 pt-2 border-t border-gray-400 text-center text-xs">
-        <p>Dicetak: {getCurrentDateInIndonesia()}</p>
-      </div>
-    </div>
-  </div>
-);
 
 const ResultsModal: React.FC<ResultsModalProps> = ({
   isOpen,
@@ -384,9 +491,9 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 pt-6 border-t no-print print-hide">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 pt-6 border-t">
             <button
-              onClick={handlePrint}
+              onClick={() => handlePrint(results, personalInfo)}
               disabled={isPrinting}
               className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border border-sky-600 text-sky-600 rounded-lg font-medium hover:bg-sky-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2"
             >
@@ -414,9 +521,6 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
             <Footer />
           </div>
         </div>
-        
-        {/* Printable Content - Hidden on screen, visible when printing */}
-        <PrintableContent results={results} personalInfo={personalInfo} />
       </div>
     </div>
   );
