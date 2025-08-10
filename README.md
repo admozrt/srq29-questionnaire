@@ -1,46 +1,246 @@
-# Getting Started with Create React App
+# SRQ-29 Mental Health Questionnaire
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📋 Deskripsi
 
-## Available Scripts
+Aplikasi web untuk Skrining Kesehatan Jiwa menggunakan kuesioner SRQ-29 (Self Reporting Questionnaire 29) yang dikembangkan oleh World Health Organization (WHO). Aplikasi ini digunakan untuk mendeteksi masalah kesehatan mental termasuk gangguan mental emosional, penggunaan zat psikoaktif, gejala psikotik, dan PTSD.
 
-In the project directory, you can run:
+## 🏥 Institusi
 
-### `npm start`
+**SHAWA (Sistem Skrining Kesehatan Jiwa)**  
+Rumah Sakit Jiwa Daerah Provinsi Kepulauan Bangka Belitung
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## ✨ Fitur Utama
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- ✅ **Form Data Pribadi** - Pengumpulan informasi responden
+- ✅ **Kuesioner SRQ-29** - 29 pertanyaan standar WHO
+- ✅ **Sistem Penilaian Otomatis** - Berdasarkan kriteria klinis
+- ✅ **Hasil dalam Modal** - Tampilan hasil yang profesional
+- ✅ **Integrasi Pendaftaran** - Direct link ke sistem antrian online
+- ✅ **Responsive Design** - Optimal di desktop dan mobile
+- ✅ **Print-friendly** - Hasil dapat dicetak
+- ✅ **Progressive Web App Ready** - Dapat diinstall sebagai aplikasi
 
-### `npm test`
+## 🎯 Kategori Skrining
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **GME (Gangguan Mental Emosional)**: Deteksi cemas dan depresi (5+ dari 20 pertanyaan)
+2. **Penggunaan Zat**: Deteksi penggunaan alkohol/narkoba berlebihan
+3. **Gangguan Psikotik**: Deteksi gejala psikosis (1+ dari 3 pertanyaan)
+4. **PTSD**: Deteksi gangguan stres pasca trauma (1+ dari 5 pertanyaan)
 
-### `npm run build`
+## 🛠️ Teknologi
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Frontend**: React 19.1.1 + TypeScript 4.9.5
+- **Styling**: Tailwind CSS 3.4.17
+- **Icons**: Lucide React 0.539.0
+- **Build Tool**: Create React App 5.0.1
+- **Testing**: React Testing Library + Jest
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📦 Instalasi
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prasyarat
 
-### `npm run eject`
+- Node.js ≥ 16.x
+- npm atau yarn
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Langkah Instalasi
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Clone Repository**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   ```bash
+   git clone <repository-url>
+   cd srq29-questionnaire
+   ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+2. **Install Dependencies**
 
-## Learn More
+   ```bash
+   npm install
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **Setup Environment**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   ```bash
+   cp .env.example .env
+   # Edit file .env sesuai kebutuhan
+   ```
+
+4. **Start Development Server**
+   ```bash
+   npm start
+   ```
+   Aplikasi akan berjalan di `http://localhost:3000`
+
+## 🏗️ Struktur Proyek
+
+```
+srq29-questionnaire/
+├── public/                 # Static files
+├── src/
+│   ├── components/        # React components
+│   │   ├── Forms/        # Form components
+│   │   │   ├── PersonalInfoForm.tsx
+│   │   │   └── QuestionnaireForm.tsx
+│   │   ├── Results/      # Results components
+│   │   │   └── ResultsModal.tsx
+│   │   └── SRQ29Questionnaire.tsx
+│   ├── data/             # Static data
+│   │   └── questions.ts  # SRQ-29 questions
+│   ├── hooks/            # Custom hooks
+│   │   └── useQuestionnaire.ts
+│   ├── types/            # TypeScript types
+│   │   └── index.ts
+│   ├── utils/            # Utility functions
+│   │   ├── calculation.ts
+│   │   └── helpers.ts
+│   ├── App.tsx           # Main app component
+│   └── index.tsx         # Entry point
+├── package.json
+├── tailwind.config.js
+├── tsconfig.json
+└── README.md
+```
+
+## 🚀 Deployment
+
+### Build Production
+
+```bash
+npm run build
+```
+
+### Deploy ke Vercel
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+### Deploy ke Netlify
+
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Build dan deploy
+npm run build
+netlify deploy --prod --dir=build
+```
+
+## 📊 Algoritma Penilaian
+
+### GME (Gangguan Mental Emosional)
+
+- **Kriteria**: 5+ jawaban "YA" dari pertanyaan 1-20
+- **Rujukan**: Psikiater/Psikolog klinis
+
+### Penggunaan Zat Psikoaktif
+
+- **Kriteria**: Jawaban "YA" pada pertanyaan 21
+- **Rujukan**: Psikiater/Psikolog klinis, Konselor adiksi
+
+### Gangguan Psikotik
+
+- **Kriteria**: 1+ jawaban "YA" dari pertanyaan 22-24
+- **Rujukan**: Psikiater/Psikolog klinis (SEGERA)
+
+### PTSD (Post Traumatic Stress Disorder)
+
+- **Kriteria**: 1+ jawaban "YA" dari pertanyaan 25-29
+- **Rujukan**: Psikiater/Psikolog klinis trauma specialist
+
+## 🎨 Komponen Utama
+
+### `SRQ29Questionnaire`
+
+Komponen utama yang mengatur alur aplikasi dan state management.
+
+### `PersonalInfoForm`
+
+Form untuk mengumpulkan data pribadi responden (nama, umur, gender, pekerjaan, alamat).
+
+### `QuestionnaireForm`
+
+Form utama dengan 29 pertanyaan SRQ-29, dilengkapi progress bar dan validasi.
+
+### `ResultsModal`
+
+Modal untuk menampilkan hasil skrining dengan interpretasi dan rekomendasi rujukan.
+
+### `useQuestionnaire`
+
+Custom hook untuk mengelola state aplikasi dan business logic.
+
+## 🔧 Konfigurasi
+
+### Environment Variables
+
+```bash
+REACT_APP_NAME=SRQ-29 Questionnaire
+REACT_APP_HOSPITAL_NAME=RSJ SAMBANG LIHUM
+REACT_APP_REGISTRATION_URL=https://antrian.sambanglihum.com/apps/RegOnline/
+```
+
+### Tailwind CSS
+
+Menggunakan konfigurasi standar dengan color scheme emerald untuk tema kesehatan.
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run tests in watch mode
+npm test -- --watch
+```
+
+## 📱 Progressive Web App
+
+Aplikasi dapat diinstall sebagai PWA dengan menambahkan file manifest dan service worker.
+
+## 🔒 Privacy & Security
+
+- **No Data Storage**: Data tidak disimpan permanen di browser
+- **Client-side Only**: Semua proses berjalan di browser pengguna
+- **HIPAA Compliant**: Desain mengikuti standar keamanan medis
+- **Encrypted HTTPS**: Wajib menggunakan HTTPS di production
+
+## 🤝 Kontribusi
+
+1. Fork repository
+2. Buat feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## 📄 Lisensi
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 👥 Tim Pengembang
+
+- **Developer**: Laravel dan React Engineer
+- **Institution**: RSJ Sambang Lihum, Kalimantan Selatan
+
+## 📞 Kontak & Support
+
+Untuk pertanyaan teknis atau support, silakan hubungi tim IT RSJ Sambang Lihum.
+
+## 📈 Roadmap
+
+- [ ] Integrasi database untuk penyimpanan hasil
+- [ ] Dashboard admin untuk analisis data
+- [ ] Export hasil ke PDF
+- [ ] Multi-language support
+- [ ] Mobile app (React Native)
+- [ ] API integration dengan sistem rumah sakit
+
+## ⚠️ Disclaimer
+
+Aplikasi ini hanya untuk skrining awal dan tidak menggantikan konsultasi medis profesional. Hasil skrining harus selalu dikonfirmasi oleh tenaga medis yang kompeten.

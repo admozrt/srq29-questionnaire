@@ -1,7 +1,8 @@
 {
   "name": "srq29-questionnaire",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
@@ -22,16 +23,35 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "CI=true react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "build:production": "npm run build && npx serve -s build",
-    "lint": "eslint src --ext .ts,.tsx",
-    "format": "prettier --write src/**/*.{ts,tsx}"
+    "build:analyze": "npm run build && npx bundle-analyzer build/static/js/*.js",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{ts,tsx,js,jsx,css,md}",
+    "format:check": "prettier --check src/**/*.{ts,tsx,js,jsx,css,md}",
+    "type-check": "tsc --noEmit",
+    "dev": "npm start",
+    "deploy:staging": "bash scripts/deploy.sh staging",
+    "deploy:production": "bash scripts/deploy.sh production",
+    "preview": "npm run build && npx serve -s build -l 3001",
+    "clean": "rm -rf build node_modules/.cache",
+    "prebuild": "npm run type-check && npm run lint",
+    "postbuild": "echo 'Build completed successfully!'",
+    "health-check": "npm run type-check && npm run lint && npm run test:ci"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "react-hooks/exhaustive-deps": "warn",
+      "no-console": ["warn", { "allow": ["warn", "error"] }]
+    }
   },
   "browserslist": {
     "production": [
@@ -48,6 +68,28 @@
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "@types/testing-library__jest-dom": "^6.0.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/index.tsx",
+      "!src/reportWebVitals.ts",
+      "!src/setupTests.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }
