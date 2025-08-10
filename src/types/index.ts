@@ -2,8 +2,7 @@ export interface PersonalInfo {
   name: string;
   age: string;
   gender: string;
-  occupation: string;
-  address: string;
+  institution: string; // Renamed from occupation to institution for clarity
 }
 
 export interface QuestionnaireAnswers {

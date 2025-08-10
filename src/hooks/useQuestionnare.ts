@@ -8,8 +8,7 @@ export const useQuestionnaire = () => {
     name: '',
     age: '',
     gender: '',
-    occupation: '',
-    address: ''
+    institution: ''
   });
   const [answers, setAnswers] = useState<QuestionnaireAnswers>({});
   const [results, setResults] = useState<Results | null>(null);
@@ -37,8 +36,7 @@ export const useQuestionnaire = () => {
       name: '',
       age: '',
       gender: '',
-      occupation: '',
-      address: ''
+      institution: ''
     });
     setShowResultsModal(false);
   };

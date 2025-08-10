@@ -1,14 +1,17 @@
-export const getCurrentDate = (): string => {
-  const now = new Date();
-  return now.toLocaleDateString('id-ID', {
-    day: '2-digit',
-    month: '2-digit', 
-    year: 'numeric'
-  }).replace(/\//g, ' ');
+export const getCurrentDateInIndonesia = () => {
+    const now = new Date();
+    return new Intl.DateTimeFormat('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Jakarta'
+    }).format(now);
 };
 
 export const validatePersonalInfo = (info: any): boolean => {
-  return !!(info.name && info.age && info.gender && info.occupation && info.address);
+  return !!(info.name && info.age && info.gender && info.institution);
 };
 
 export const redirectToRegistration = (): void => {

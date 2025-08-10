@@ -63,13 +63,12 @@ describe('SRQ29Questionnaire', () => {
       name: '',
       age: '',
       gender: '',
-      occupation: '',
-      address: ''
+      institution: ''
     },
     handlePersonalInfoChange: jest.fn(),
     answers: {},
     handleAnswerChange: jest.fn(),
-    results: null as null | { gme: boolean; substance: boolean; psychotic: boolean; ptsd: boolean; totalScore: number }, // 修改这一行
+    results: null as null | { gme: boolean; substance: boolean; psychotic: boolean; ptsd: boolean; totalScore: number },
     showResultsModal: false,
     setShowResultsModal: jest.fn(),
     handleSubmit: jest.fn(),
@@ -109,8 +108,7 @@ describe('SRQ29Questionnaire', () => {
         name: 'John Doe',
         age: '30',
         gender: 'Pria',
-        occupation: 'Engineer',
-        address: 'Jakarta'
+        institution: 'Universitas ABC'
       };
       
       render(<SRQ29Questionnaire />);
@@ -129,8 +127,7 @@ describe('SRQ29Questionnaire', () => {
         name: 'John Doe',
         age: '30',
         gender: 'Pria',
-        occupation: 'Engineer',
-        address: 'Jakarta'
+        institution: 'Universitas ABC'
       };
     });
 
@@ -179,8 +176,7 @@ describe('SRQ29Questionnaire', () => {
         name: 'John Doe',
         age: '30',
         gender: 'Pria',
-        occupation: 'Engineer',
-        address: 'Jakarta'
+        institution: 'Universitas ABC'
       };
     });
 

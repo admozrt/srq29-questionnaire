@@ -1,7 +1,9 @@
 import React from 'react';
 import { User, Calendar, MapPin, FileText, AlertTriangle, CheckCircle, X, ExternalLink } from 'lucide-react';
 import { PersonalInfo, Results } from '../../types';
-import { getCurrentDate } from '../../utils/helpers';
+import { getCurrentDateInIndonesia } from '../../utils/helpers';
+import Footer from '../Footer/Footer';
+import LogoHeader from '../LogoHeader/LogoHeader';
 
 interface ResultsModalProps {
   isOpen: boolean;
@@ -11,18 +13,6 @@ interface ResultsModalProps {
   onFinish: () => void;
   onContinue: () => void;
 }
-
-const getCurrentDateInIndonesia = () => {
-    const now = new Date();
-    return new Intl.DateTimeFormat('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Asia/Jakarta'
-    }).format(now);
-  };
 
 const ResultsModal: React.FC<ResultsModalProps> = ({
   isOpen,
@@ -37,22 +27,28 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-emerald-600 text-white p-6 text-center relative">
+        <div className="bg-sky-600 text-white p-6 relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
+            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors z-10"
           >
             <X className="w-6 h-6" />
           </button>
-          <FileText className="w-12 h-12 mx-auto mb-3" />
-          <h1 className="text-2xl font-bold">Hasil Skrining Kesehatan Jiwa</h1>
+          
+          {/* Logo and Title Section */}
+          <LogoHeader size="small">
+            <div className="text-center">
+              <FileText className="w-12 h-12 mx-auto mb-3" />
+              <h1 className="text-2xl font-bold">Hasil Skrining Kesehatan Jiwa</h1>
+            </div>
+          </LogoHeader>
         </div>
 
         <div className="p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <Calendar className="w-5 h-5 text-emerald-600" />
+                <Calendar className="w-5 h-5 text-sky-600" />
                 <div>
                   <span className="font-medium">Tanggal Tes:</span>
                   <span className="ml-2">{getCurrentDateInIndonesia()}</span>
@@ -60,7 +56,7 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               </div>
               
               <div className="flex items-center space-x-3">
-                <User className="w-5 h-5 text-emerald-600" />
+                <User className="w-5 h-5 text-sky-600" />
                 <div>
                   <span className="font-medium">Nama Lengkap:</span>
                   <span className="ml-2">{personalInfo.name}</span>
@@ -68,7 +64,7 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               </div>
 
               <div className="flex items-center space-x-3">
-                <span className="w-5 h-5 text-emerald-600 text-center font-bold">♂♀</span>
+                <span className="w-5 h-5 text-sky-600 text-center font-bold">♂♀</span>
                 <div>
                   <span className="font-medium">Jenis Kelamin:</span>
                   <span className="ml-2">{personalInfo.gender}</span>
@@ -78,7 +74,7 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
 
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <span className="w-5 h-5 text-emerald-600 text-center font-bold">#</span>
+                <span className="w-5 h-5 text-sky-600 text-center font-bold">#</span>
                 <div>
                   <span className="font-medium">Umur:</span>
                   <span className="ml-2">{personalInfo.age}</span>
@@ -86,18 +82,10 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               </div>
 
               <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-emerald-600" />
+                <MapPin className="w-5 h-5 text-sky-600" />
                 <div>
-                  <span className="font-medium">Domisili:</span>
-                  <span className="ml-2">{personalInfo.address}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <span className="w-5 h-5 text-emerald-600 text-center font-bold">💼</span>
-                <div>
-                  <span className="font-medium">Pekerjaan:</span>
-                  <span className="ml-2">{personalInfo.occupation}</span>
+                  <span className="font-medium">Instansi/Domisili:</span>
+                  <span className="ml-2">{personalInfo.institution}</span>
                 </div>
               </div>
             </div>
@@ -185,7 +173,7 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8 pt-6 border-t">
             <button
               onClick={() => window.print()}
-              className="px-6 py-3 border border-emerald-600 text-emerald-600 rounded-lg font-medium hover:bg-emerald-50 transition-colors"
+              className="px-6 py-3 border border-sky-600 text-sky-600 rounded-lg font-medium hover:bg-sky-50 transition-colors"
             >
               Cetak Hasil
             </button>
@@ -199,12 +187,14 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
             
             <button
               onClick={onContinue}
-              className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors inline-flex items-center gap-2"
+              className="px-6 py-3 bg-sky-600 text-white rounded-lg font-medium hover:bg-sky-700 transition-colors inline-flex items-center gap-2"
             >
               Lanjutkan ke Pendaftaran Online
               <ExternalLink className="w-4 h-4" />
             </button>
           </div>
+          
+          <Footer />
         </div>
       </div>
     </div>
