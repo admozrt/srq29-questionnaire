@@ -1,3 +1,271 @@
+/* Additional responsive styles for SRQ-29 App */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Ensure proper font scaling */
+  html {
+    font-size: 16px;
+  }
+  
+  @screen sm {
+    html {
+      font-size: 16px;
+    }
+  }
+  
+  @screen lg {
+    html {
+      font-size: 16px;
+    }
+  }
+}
+
+@layer components {
+  /* Custom responsive container */
+  .container-responsive {
+    @apply w-full mx-auto px-3 sm:px-4 lg:px-6 xl:px-8;
+    max-width: 1200px;
+  }
+  
+  /* Responsive text scaling */
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .text-responsive-sm {
+    @apply text-xs sm:text-sm lg:text-base;
+  }
+  
+  /* Form inputs responsive styling */
+  .input-responsive {
+    @apply w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg;
+    @apply focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors;
+  }
+  
+  /* Button responsive styling */
+  .btn-responsive {
+    @apply px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-medium;
+    @apply rounded-lg transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-sky-600 text-white hover:bg-sky-700;
+  }
+  
+  .btn-secondary {
+    @apply border border-gray-300 text-gray-700 hover:bg-gray-50;
+  }
+  
+  /* Card responsive styling */
+  .card-responsive {
+    @apply bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8;
+  }
+  
+  /* Modal responsive styling */
+  .modal-responsive {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center;
+    @apply p-2 sm:p-4 z-50;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-lg shadow-xl w-full max-h-[95vh] sm:max-h-[90vh];
+    @apply overflow-y-auto;
+  }
+}
+
+@layer utilities {
+  /* Touch-friendly interactive elements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Responsive spacing */
+  .space-responsive {
+    @apply space-y-3 sm:space-y-4 lg:space-y-6;
+  }
+  
+  /* Responsive padding */
+  .p-responsive {
+    @apply p-3 sm:p-4 lg:p-6;
+  }
+  
+  .px-responsive {
+    @apply px-3 sm:px-4 lg:px-6;
+  }
+  
+  .py-responsive {
+    @apply py-3 sm:py-4 lg:py-6;
+  }
+  
+  /* Responsive margins */
+  .m-responsive {
+    @apply m-3 sm:m-4 lg:m-6;
+  }
+  
+  .mb-responsive {
+    @apply mb-3 sm:mb-4 lg:mb-6;
+  }
+  
+  .mt-responsive {
+    @apply mt-3 sm:mt-4 lg:mt-6;
+  }
+  
+  /* Responsive grid gaps */
+  .gap-responsive {
+    @apply gap-3 sm:gap-4 lg:gap-6;
+  }
+  
+  /* Text overflow handling */
+  .text-overflow-responsive {
+    @apply truncate sm:break-words;
+  }
+}
+
+/* Print styles */
+@media print {
+  /* Hide unnecessary elements */
+  .no-print,
+  button,
+  .print-hide {
+    display: none !important;
+  }
+  
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-break-inside-avoid {
+    page-break-inside: avoid;
+  }
+  
+  /* Reset page styles */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: black !important;
+    background: white !important;
+  }
+  
+  /* Modal specific print styles */
+  .modal-responsive {
+    position: static !important;
+    background: white !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .modal-content {
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Header styles for print */
+  .bg-sky-600 {
+    background: white !important;
+    color: black !important;
+    border-bottom: 2px solid black !important;
+  }
+  
+  /* Alert styles for print */
+  .bg-red-50,
+  .bg-orange-50,
+  .bg-purple-50,
+  .bg-green-50,
+  .bg-blue-50 {
+    background: white !important;
+    border: 1px solid black !important;
+  }
+  
+  .text-red-800,
+  .text-orange-800,
+  .text-purple-800,
+  .text-green-800,
+  .text-blue-800 {
+    color: black !important;
+  }
+  
+  .text-red-700,
+  .text-orange-700,
+  .text-purple-700,
+  .text-green-700,
+  .text-blue-700 {
+    color: #333 !important;
+  }
+  
+  /* Prevent page breaks in important sections */
+  .print-keep-together {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure proper margins */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+  
+  /* Logo adjustments for print */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Printing state styles */
+body.printing {
+  overflow: hidden;
+}
+
+body.printing * {
+  pointer-events: none !important;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .border-gray-300 {
+    border-color: #000;
+  }
+  
+  .text-gray-600 {
+    color: #000;
+  }
+  
+  .bg-gray-50 {
+    background-color: #fff;
+    border: 1px solid #000;
+  }
+}
+
+/* Focus visible for better keyboard navigation */
+.focus\:ring-2:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}

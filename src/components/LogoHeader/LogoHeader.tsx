@@ -11,7 +11,10 @@ const LogoHeader: React.FC<LogoHeaderProps> = ({
   className = '',
   children 
 }) => {
-  const logoHeight = size === 'large' ? 'h-16' : 'h-12';
+  // Responsive logo heights based on size and screen
+  const logoClasses = size === 'large' 
+    ? 'h-10 sm:h-12 lg:h-16' 
+    : 'h-8 sm:h-10 lg:h-12';
   
   return (
     <div className={`flex justify-between items-center ${className}`}>
@@ -19,12 +22,12 @@ const LogoHeader: React.FC<LogoHeaderProps> = ({
         <img 
           src="/file.png" 
           alt="Logo Kiri" 
-          className={`${logoHeight} w-auto object-contain`}
+          className={`${logoClasses} w-auto object-contain`}
         />
       </div>
       
       {children && (
-        <div className="flex-1 text-center px-4">
+        <div className="flex-1 text-center px-2 sm:px-4 min-w-0">
           {children}
         </div>
       )}
@@ -33,7 +36,7 @@ const LogoHeader: React.FC<LogoHeaderProps> = ({
         <img 
           src="/logo-rsj.png" 
           alt="Logo RSJ Sambang Lihum" 
-          className={`${logoHeight} w-auto object-contain`}
+          className={`${logoClasses} w-auto object-contain`}
         />
       </div>
     </div>

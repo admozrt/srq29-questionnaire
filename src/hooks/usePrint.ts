@@ -1,0 +1,89 @@
+import { useState, useCallback, useEffect } from 'react';
+
+interface UsePrintOptions {
+  onBeforePrint?: () => void;
+  onAfterPrint?: () => void;
+}
+
+export const usePrint = (options: UsePrintOptions = {}) => {
+  const [isPrinting, setIsPrinting] = useState(false);
+  const [printError, setPrintError] = useState<string | null>(null);
+
+  const handlePrint = useCallback(async () => {
+    if (isPrinting) {
+      console.warn('Print already in progress');
+      return;
+    }
+
+    try {
+      setIsPrinting(true);
+      setPrintError(null);
+      
+      // Call before print callback
+      if (options.onBeforePrint) {
+        options.onBeforePrint();
+      }
+
+      // Add printing class to body
+      document.body.classList.add('printing');
+      
+      // Small delay to ensure styles are applied
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Trigger print
+      window.print();
+      
+    } catch (error) {
+      console.error('Print failed:', error);
+      setPrintError(error instanceof Error ? error.message : 'Print failed');
+    } finally {
+      // Cleanup function
+      const cleanup = () => {
+        document.body.classList.remove('printing');
+        setIsPrinting(false);
+        
+        // Call after print callback
+        if (options.onAfterPrint) {
+          options.onAfterPrint();
+        }
+      };
+
+      // Cleanup after a delay to ensure print dialog is handled
+      setTimeout(cleanup, 1000);
+    }
+  }, [isPrinting, options]);
+
+  // Listen for browser print events
+  useEffect(() => {
+    const beforePrint = () => {
+      if (options.onBeforePrint) {
+        options.onBeforePrint();
+      }
+    };
+
+    const afterPrint = () => {
+      setIsPrinting(false);
+      document.body.classList.remove('printing');
+      if (options.onAfterPrint) {
+        options.onAfterPrint();
+      }
+    };
+
+    // Add event listeners for browser print events
+    window.addEventListener('beforeprint', beforePrint);
+    window.addEventListener('afterprint', afterPrint);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('beforeprint', beforePrint);
+      window.removeEventListener('afterprint', afterPrint);
+    };
+  }, [options]);
+
+  return {
+    isPrinting,
+    printError,
+    handlePrint,
+    clearError: () => setPrintError(null)
+  };
+};
