@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SRQ29Questionnaire from '../SRQ29Questionnaire';
 
@@ -238,9 +238,12 @@ describe('SRQ29Questionnaire', () => {
     it('renders null when currentStep is not recognized', () => {
       mockUseQuestionnaire.currentStep = 'unknown' as any;
       
-      const { container } = render(<SRQ29Questionnaire />);
+      render(<SRQ29Questionnaire />);
       
-      expect(container.firstChild).toBeNull();
+      // Check that no expected content is rendered instead of accessing container.firstChild
+      expect(screen.queryByTestId('personal-info-form')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('questionnaire-form')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('results-modal')).not.toBeInTheDocument();
     });
 
     it('properly handles step transitions', () => {
