@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="text-center py-4 text-sm text-gray-600">
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
-        <span>© RSJ Sambang Lihum {new Date().getFullYear()}</span>
+        <span>© RSJ Sambang Lihum {new Date().getFullYear()} - Inst.IT & SIMRS</span>
         
         {/* Separator - hidden on mobile, visible on desktop */}
         <span className="hidden sm:inline text-gray-400">|</span>

@@ -29,7 +29,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
                 SELAMAT DATANG
               </h1>
               <p className="text-xs sm:text-sm mt-1 sm:mt-2 leading-relaxed">
-                Sistem Skrining Kesehatan Jiwa - Rumah Sakit Jiwa Sambang Lihum - 
+                Sistem Skrining Kesehatan Jiwa <br/> Rumah Sakit Jiwa Sambang Lihum - 
                 Daerah Provinsi Kalimantan Selatan
               </p>
             </div>
@@ -58,11 +58,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
           {/* Instructions List */}
           <div className="space-y-3 sm:space-y-4 mb-6">
             {[
-              "Pastikan usia anda 18 tahun",
+              "Pastikan usia Anda minimal 18 tahun untuk mengisi kuesioner ini",
               "Bacalah petunjuk ini sebaik-baiknya sebelum mulai mengisi",
               "Pertanyaan-pertanyaan berikut berhubungan dengan masalah yang mungkin mengganggu Anda selama 30 hari terakhir",
               "Jika Anda merasa pertanyaan itu berlaku Untuk Anda dan Anda mengalami masalah yang disebutkan dalam 30 hari terakhir, maka pilihlah jawaban Ya. Sebaliknya, apabila Anda menganggap pertanyaan itu tidak berlaku bagi Anda dan tidak mengalami masalah yang disebutkan dalam 30 hari terakhir, maka pilihlah jawaban yang paling sesuai di antara Ya dan Tidak",
-              "Jawab lagsung setiap pertanyaan, jangan Anda biarkan terlalu lama dan jangan pikirkan hanya untuk memberikan kesan yang Anda",
+              "Jawab langsung setiap pertanyaan, jangan Anda biarkan terlalu lama dan jangan pikirkan hanya untuk memberikan kesan yang baik",
             ].map((instruction, index) => (
               <div key={index} className="flex items-start space-x-2 sm:space-x-3 text-xs sm:text-sm">
                 <div className="w-5 h-5 sm:w-6 sm:h-6 bg-sky-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
