@@ -39,6 +39,7 @@ const usePrint = () => {
       }
 
       // HTML content untuk print (same as before, truncated for brevity)
+            // HTML content untuk print dengan logo
       const printHTML = `
         <!DOCTYPE html>
         <html>
@@ -57,14 +58,105 @@ const usePrint = () => {
               padding-bottom: 20px;
               border-bottom: 3px solid black;
             }
-            /* Add all other print styles here */
+            .logo-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
+              padding: 0 20px;
+            }
+            .logo {
+              height: 60px;
+              width: auto;
+              object-fit: contain;
+            }
+            .title-section {
+              flex: 1;
+              text-align: center;
+              padding: 0 20px;
+            }
+            .section {
+              margin-bottom: 25px;
+              page-break-inside: avoid;
+            }
+            .section h3 {
+              color: #1e40af;
+              border-bottom: 2px solid #1e40af;
+              padding-bottom: 5px;
+              margin-bottom: 15px;
+            }
+            .info-grid {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 20px;
+              margin-bottom: 20px;
+            }
+            .info-item {
+              display: flex;
+              margin-bottom: 8px;
+            }
+            .info-label {
+              font-weight: bold;
+              width: 140px;
+              flex-shrink: 0;
+            }
+            .result-item {
+              margin-bottom: 15px;
+              padding: 10px;
+              border-left: 4px solid #dc2626;
+              background-color: #fef2f2;
+            }
+            .result-positive {
+              border-left-color: #dc2626;
+              background-color: #fef2f2;
+            }
+            .result-orange {
+              border-left-color: #ea580c;
+              background-color: #fff7ed;
+            }
+            .result-purple {
+              border-left-color: #9333ea;
+              background-color: #faf5ff;
+            }
+            .result-green {
+              border-left-color: #16a34a;
+              background-color: #f0fdf4;
+            }
+            .result-title {
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
+            .result-rujukan {
+              font-size: 0.9em;
+              color: #666;
+            }
+            .note {
+              border: 2px solid #666;
+              padding: 15px;
+              margin: 20px 0;
+              border-radius: 5px;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #ccc;
+              font-size: 0.9em;
+              color: #666;
+            }
           </style>
         </head>
         <body>
           <div class="header">
-            <h1>HASIL SKRINING KESEHATAN JIWA</h1>
-            <h2>Self Reporting Questionnaire 29 (SRQ-29)</h2>
-            <p>RSJ Sambang Lihum - Provinsi Kalimantan Selatan</p>
+            <div class="logo-header">
+              <img src="/file.png" alt="Logo Kiri" class="logo" />
+              <div class="title-section">
+                <h1>HASIL SKRINING KESEHATAN JIWA</h1>
+                <h2>Self Reporting Questionnaire 29 (SRQ-29)</h2>
+                <p>Rumah Sakit Jiwa Sambang Lihum - Provinsi Kalimantan Selatan</p>
+              </div>
+              <img src="/logo-rsj.png" alt="Logo RSJ Sambang Lihum" class="logo" />
+            </div>
           </div>
           
           <div class="section">
