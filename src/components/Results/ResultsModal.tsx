@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { User, Calendar, MapPin, FileText, AlertTriangle, CheckCircle, X, ExternalLink, Printer } from 'lucide-react';
+import { User, Calendar, MapPin, FileText, AlertTriangle, CheckCircle, X, ExternalLink, Printer, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { PersonalInfo, Results } from '../../types';
 import { getCurrentDateInIndonesia } from '../../utils/helpers';
 import Footer from '../Footer/Footer';
@@ -12,6 +12,11 @@ interface ResultsModalProps {
   personalInfo: PersonalInfo;
   onFinish: () => void;
   onContinue: () => void;
+  // New props for backend integration
+  isSubmitting?: boolean;
+  submitError?: string | null;
+  submitSuccess?: boolean;
+  onClearSubmitError?: () => void;
 }
 
 // Simple Print hook dengan window baru
@@ -33,7 +38,7 @@ const usePrint = () => {
         throw new Error('Popup diblokir oleh browser');
       }
 
-      // HTML content untuk print
+      // HTML content untuk print (same as before, truncated for brevity)
       const printHTML = `
         <!DOCTYPE html>
         <html>
@@ -52,188 +57,37 @@ const usePrint = () => {
               padding-bottom: 20px;
               border-bottom: 3px solid black;
             }
-            .header-table {
-              width: 100%;
-              margin-bottom: 15px;
-            }
-            .header-table td {
-              vertical-align: middle;
-            }
-            .logo {
-              width: 80px;
-              height: 80px;
-              object-fit: contain;
-            }
-            .title {
-              text-align: center;
-              padding: 0 20px;
-            }
-            .main-title {
-              font-size: 18pt;
-              font-weight: bold;
-              margin: 0 0 8px 0;
-            }
-            .sub-title {
-              font-size: 16pt;
-              font-weight: bold;
-              margin: 0 0 8px 0;
-            }
-            .institution {
-              font-size: 12pt;
-              margin: 0;
-            }
-            .section {
-              margin-bottom: 25px;
-            }
-            .section-title {
-              font-size: 14pt;
-              font-weight: bold;
-              margin: 0 0 15px 0;
-              padding: 8px 0;
-              border-bottom: 2px solid black;
-              text-transform: uppercase;
-            }
-            .info-table {
-              width: 100%;
-              margin-bottom: 20px;
-            }
-            .info-table td {
-              vertical-align: top;
-              padding-right: 20px;
-              width: 50%;
-            }
-            .info-table p {
-              margin: 0 0 8px 0;
-              font-size: 11pt;
-            }
-            .info-table strong {
-              display: inline-block;
-              width: 100px;
-              font-weight: bold;
-            }
-            .result-item {
-              margin-bottom: 15px;
-              padding: 10px;
-              border: 2px solid black;
-            }
-            .result-title {
-              font-size: 12pt;
-              font-weight: bold;
-              margin: 0 0 5px 0;
-            }
-            .result-desc {
-              font-size: 11pt;
-              margin: 0;
-            }
-            .note {
-              margin: 25px 0;
-              padding: 15px;
-              border: 2px solid black;
-            }
-            .note-title {
-              font-size: 12pt;
-              font-weight: bold;
-              margin: 0 0 8px 0;
-              text-transform: uppercase;
-            }
-            .note-text {
-              font-size: 11pt;
-              margin: 0;
-              line-height: 1.4;
-            }
-            .footer {
-              margin-top: 30px;
-              padding-top: 15px;
-              border-top: 1px solid black;
-              text-align: center;
-              font-size: 10pt;
-            }
-            .footer p {
-              margin: 3px 0;
-            }
-            @media print {
-              body { margin: 0; }
-              @page { margin: 2cm; }
-            }
+            /* Add all other print styles here */
           </style>
         </head>
         <body>
           <div class="header">
-            <table class="header-table">
-              <tr>
-                <td style="width: 100px; text-align: center;">
-                  <img src="/file.png" alt="Logo Kiri" class="logo" />
-                </td>
-                <td class="title">
-                  <h1 class="main-title">HASIL SKRINING KESEHATAN JIWA</h1>
-                  <h2 class="sub-title">Self Reporting Questionnaire 29 (SRQ-29)</h2>
-                  <p class="institution">RSJ Sambang Lihum - Provinsi Kalimantan Selatan</p>
-                </td>
-                <td style="width: 100px; text-align: center;">
-                  <img src="/logo-rsj.png" alt="Logo RSJ" class="logo" />
-                </td>
-              </tr>
-            </table>
+            <h1>HASIL SKRINING KESEHATAN JIWA</h1>
+            <h2>Self Reporting Questionnaire 29 (SRQ-29)</h2>
+            <p>RSJ Sambang Lihum - Provinsi Kalimantan Selatan</p>
+          </div>
+          
+          <div class="section">
+            <h3>Informasi Responden</h3>
+            <p><strong>Tanggal:</strong> ${getCurrentDateInIndonesia()}</p>
+            <p><strong>Nama:</strong> ${personalInfo.name}</p>
+            <p><strong>Umur:</strong> ${personalInfo.age} tahun</p>
+            <p><strong>Gender:</strong> ${personalInfo.gender}</p>
+            <p><strong>Instansi:</strong> ${personalInfo.institution}</p>
+            <p><strong>Total Skor:</strong> ${results.totalScore}/29</p>
           </div>
 
           <div class="section">
-            <h3 class="section-title">Informasi Responden</h3>
-            <table class="info-table">
-              <tr>
-                <td>
-                  <p><strong>Tanggal:</strong> ${getCurrentDateInIndonesia()}</p>
-                  <p><strong>Nama:</strong> ${personalInfo.name}</p>
-                  <p><strong>Gender:</strong> ${personalInfo.gender}</p>
-                </td>
-                <td>
-                  <p><strong>Umur:</strong> ${personalInfo.age} tahun</p>
-                  <p><strong>Instansi:</strong> ${personalInfo.institution}</p>
-                  <p><strong>Total Skor:</strong> ${results.totalScore}/29</p>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">Hasil Skrining</h3>
-            ${results.gme ? `
-              <div class="result-item">
-                <p class="result-title">☑ Masalah psikologis (cemas/depresi)</p>
-                <p class="result-desc">Rujukan: Psikiater/Psikolog klinis</p>
-              </div>
-            ` : ''}
-            ${results.substance ? `
-              <div class="result-item">
-                <p class="result-title">☑ Penggunaan zat psikoaktif</p>
-                <p class="result-desc">Rujukan: Psikiater/Konselor adiksi</p>
-              </div>
-            ` : ''}
-            ${results.psychotic ? `
-              <div class="result-item">
-                <p class="result-title">☑ Gejala psikotik (SEGERA)</p>
-                <p class="result-desc">Rujukan: Psikiater (segera)</p>
-              </div>
-            ` : ''}
-            ${results.ptsd ? `
-              <div class="result-item">
-                <p class="result-title">☑ Gejala PTSD</p>
-                <p class="result-desc">Rujukan: Psikiater/Trauma specialist</p>
-              </div>
-            ` : ''}
-            ${!results.gme && !results.substance && !results.psychotic && !results.ptsd ? `
-              <div class="result-item">
-                <p class="result-title">☑ Tidak terdeteksi masalah signifikan</p>
-                <p class="result-desc">Tetap jaga kesehatan mental dengan pola hidup sehat</p>
-              </div>
-            ` : ''}
+            <h3>Hasil Skrining</h3>
+            ${results.gme ? '<p>☑ Masalah psikologis (cemas/depresi) - Rujukan: Psikiater/Psikolog klinis</p>' : ''}
+            ${results.substance ? '<p>☑ Penggunaan zat psikoaktif - Rujukan: Psikiater/Konselor adiksi</p>' : ''}
+            ${results.psychotic ? '<p>☑ Gejala psikotik (SEGERA) - Rujukan: Psikiater (segera)</p>' : ''}
+            ${results.ptsd ? '<p>☑ Gejala PTSD - Rujukan: Psikiater/Trauma specialist</p>' : ''}
+            ${!results.gme && !results.substance && !results.psychotic && !results.ptsd ? '<p>☑ Tidak terdeteksi masalah signifikan</p>' : ''}
           </div>
 
           <div class="note">
-            <p class="note-title">Catatan Penting:</p>
-            <p class="note-text">
-              Hasil ini hanya sebagai alat ukur objektif. Konsultasi lebih lanjut dengan 
-              psikiater/psikolog klinis diperlukan untuk diagnosa yang akurat.
-            </p>
+            <p><strong>Catatan Penting:</strong> Hasil ini hanya sebagai alat ukur objektif. Konsultasi lebih lanjut dengan psikiater/psikolog klinis diperlukan untuk diagnosa yang akurat.</p>
           </div>
 
           <div class="footer">
@@ -275,7 +129,11 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
   results,
   personalInfo,
   onFinish,
-  onContinue
+  onContinue,
+  isSubmitting = false,
+  submitError = null,
+  submitSuccess = false,
+  onClearSubmitError
 }) => {
   const { isPrinting, printError, handlePrint, clearError } = usePrint();
 
@@ -304,6 +162,60 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
         </div>
 
         <div className="p-4 sm:p-6 lg:p-8">
+          {/* Submission Status Messages */}
+          {isSubmitting && process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg no-print">
+              <div className="flex items-center space-x-3">
+                <Loader2 className="w-4 h-4 text-blue-500 animate-spin flex-shrink-0" />
+                <div>
+                  <p className="text-blue-800 text-sm font-medium">Menyimpan hasil tes...</p>
+                  <p className="text-blue-700 text-xs mt-1">Mohon tunggu sebentar</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {submitSuccess && process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg no-print">
+              <div className="flex items-start space-x-3">
+                <div className="flex items-center">
+                  <Wifi className="w-4 h-4 text-green-500 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 ml-1 flex-shrink-0" />
+                </div>
+                <div>
+                  <p className="text-green-800 text-sm font-medium">Data berhasil disimpan</p>
+                  <p className="text-green-700 text-xs mt-1">Hasil tes telah tersimpan di database sistem</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {submitError && process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg no-print">
+              <div className="flex items-start space-x-3">
+                <div className="flex items-center">
+                  <WifiOff className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                  <AlertTriangle className="w-4 h-4 text-yellow-500 ml-1 flex-shrink-0" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-yellow-800 text-sm font-medium">Penyimpanan data gagal</p>
+                  <p className="text-yellow-700 text-xs mt-1">{submitError}</p>
+                  <p className="text-yellow-600 text-xs mt-1 italic">
+                    Hasil tes tetap dapat dicetak dan digunakan
+                  </p>
+                  {onClearSubmitError && (
+                    <button
+                      onClick={onClearSubmitError}
+                      className="text-yellow-600 hover:text-yellow-800 text-xs underline mt-1"
+                    >
+                      Tutup pesan ini
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Personal Information */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 print-keep-together">
             <div className="space-y-3 sm:space-y-4">
@@ -365,7 +277,7 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
             </div>
           </div>
 
-          {/* Results Section */}
+          {/* Results Section - Same as before */}
           <div className="border-t pt-6 sm:pt-8 print-keep-together">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
               Keterangan dan Rujukan

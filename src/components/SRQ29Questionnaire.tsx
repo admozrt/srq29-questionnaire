@@ -1,3 +1,5 @@
+// src/components/SRQ29Questionnaire.tsx
+
 import React from 'react';
 import { useQuestionnaire } from '../hooks/useQuestionnare';
 import PersonalInfoForm from './Forms/PersonalInfoForm';
@@ -16,7 +18,12 @@ const SRQ29Questionnaire: React.FC = () => {
     showResultsModal,
     setShowResultsModal,
     handleSubmit,
-    resetQuestionnaire
+    resetQuestionnaire,
+    // New props for backend integration
+    isSubmitting,
+    submitError,
+    submitSuccess,
+    clearSubmitError,
   } = useQuestionnaire();
 
   const handleFinish = () => {
@@ -57,6 +64,11 @@ const SRQ29Questionnaire: React.FC = () => {
             personalInfo={personalInfo}
             onFinish={handleFinish}
             onContinue={handleContinue}
+            // New props for backend integration
+            isSubmitting={isSubmitting}
+            submitError={submitError}
+            submitSuccess={submitSuccess}
+            onClearSubmitError={clearSubmitError}
           />
         )}
       </>
