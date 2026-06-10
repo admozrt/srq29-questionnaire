@@ -10,10 +10,29 @@ const SimpleRouter: React.FC = () => {
   const renderRoute = () => {
     switch (currentRoute) {
       case 'admin':
-        return <ProtectedAdminRoute />;
+        // React 19 hoists these tags into <head>. Keep the admin dashboard
+        // out of search indexes.
+        return (
+          <>
+            <title>Admin Dashboard | SRQ-29 RSJ Sambang Lihum</title>
+            <meta name="robots" content="noindex, nofollow" />
+            <ProtectedAdminRoute />
+          </>
+        );
       case 'questionnaire':
       default:
-        return <SRQ29Questionnaire />;
+        return (
+          <>
+            <title>
+              Skrining Kesehatan Jiwa SRQ-29 | RSJ Sambang Lihum
+            </title>
+            <meta
+              name="description"
+              content="Tes skrining kesehatan jiwa online gratis dengan kuesioner SRQ-29 standar WHO dari RSJ Sambang Lihum, Kalimantan Selatan. Deteksi dini gangguan mental emosional, penggunaan zat, gejala psikotik, dan PTSD."
+            />
+            <SRQ29Questionnaire />
+          </>
+        );
     }
   };
 
