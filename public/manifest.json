@@ -1,6 +1,10 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SRQ-29 SALI",
+  "name": "Skrining Kesehatan Jiwa SRQ-29 — RSJ Sambang Lihum",
+  "description": "Tes skrining kesehatan jiwa online dengan kuesioner SRQ-29 standar WHO dari RSJ Sambang Lihum, Kalimantan Selatan.",
+  "lang": "id",
+  "dir": "ltr",
+  "categories": ["health", "medical", "lifestyle"],
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +14,20 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
+  "scope": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "orientation": "portrait",
+  "theme_color": "#059669",
   "background_color": "#ffffff"
 }

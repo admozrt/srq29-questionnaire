@@ -2,12 +2,11 @@
   "name": "srq29-questionnaire",
   "version": "1.0.0",
   "private": true,
-  "homepage": "./",
+  "homepage": "/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.9",
@@ -39,8 +38,16 @@
     "preview": "npm run build && npx serve -s build -l 3001",
     "clean": "rm -rf build node_modules/.cache",
     "prebuild": "npm run type-check && npm run lint",
-    "postbuild": "echo 'Build completed successfully!'",
+    "postbuild": "react-snap",
     "health-check": "npm run type-check && npm run lint && npm run test:ci"
+  },
+  "reactSnap": {
+    "source": "build",
+    "inlineCss": false,
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -48,9 +55,22 @@
       "react-app/jest"
     ],
     "rules": {
-      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ],
       "react-hooks/exhaustive-deps": "warn",
-      "no-console": ["warn", { "allow": ["warn", "error"] }]
+      "no-console": [
+        "warn",
+        {
+          "allow": [
+            "warn",
+            "error"
+          ]
+        }
+      ]
     }
   },
   "browserslist": {
@@ -66,10 +86,12 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/user-event": "^14.6.1",
+    "@types/testing-library__jest-dom": "^6.0.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17",
-    "@types/testing-library__jest-dom": "^6.0.0"
+    "react-snap": "^1.23.0",
+    "tailwindcss": "^3.4.17"
   },
   "jest": {
     "collectCoverageFrom": [

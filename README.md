@@ -129,6 +129,20 @@ npm run build
 netlify deploy --prod --dir=build
 ```
 
+## 🔍 SEO & Pre-rendering
+
+Aplikasi sudah dioptimasi untuk mesin pencari tradisional maupun pencarian AI (Google AI Overviews/SGE, Bing, dll.):
+
+- **Metadata lengkap** di `public/index.html`: `lang="id"`, title & description Bahasa Indonesia, Open Graph, Twitter Card, dan canonical (`https://srq.sambanglihum.com/`).
+- **Structured Data (JSON-LD)**: `MedicalWebPage`, `WebApplication`, `Hospital` (MedicalOrganization), dan `FAQPage` — sangat membantu kemunculan di rich results & AI Overviews.
+- **`robots.txt`** mengizinkan crawler umum + AI (Googlebot, Google-Extended, GPTBot, PerplexityBot, dll.), memblokir `/admin`, dan menunjuk ke `sitemap.xml`.
+- **`sitemap.xml`** untuk discovery.
+- **Pre-rendering** dengan [`react-snap`](https://github.com/stereobooster/react-snap) yang berjalan otomatis pada `postbuild`, sehingga crawler/AI yang tidak mengeksekusi JavaScript tetap melihat konten halaman. Metadata per-route memakai dukungan native React 19 (tag `<title>`/`<meta>` yang dirender di komponen otomatis diangkat ke `<head>`); rute `/admin` diberi `noindex`.
+
+> **Catatan deployment/CI**: `react-snap` menggunakan headless Chromium, jadi environment build harus memiliki dependensi sistem Chromium. Pada Debian/Ubuntu minimal, pastikan paket seperti `libxss1`, `libnss3`, `libatk-bridge2.0-0`, `libgtk-3-0`, dan `libasound2` terpasang. Bila pre-render tidak diperlukan, hapus script `postbuild` — lapisan metadata + JSON-LD statis tetap aktif.
+
+Setelah `npm run build`, periksa `build/index.html` memiliki konten ter-render di dalam `<div id="root">` dan blok JSON-LD pada `<head>`.
+
 ## 📊 Algoritma Penilaian
 
 ### GME (Gangguan Mental Emosional)
